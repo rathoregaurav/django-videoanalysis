@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from tvid.settings import STATIC_URL
 from rest_framework import status
 import subprocess
+import os
 
 def getDirectoryContents(dPath):
     import os 
@@ -17,7 +18,8 @@ def getDirectoryContents(dPath):
         if os.path.isdir(sChildPath):
             getDirectoryContents(sChildPath)
         else:
-            lst.append(sChildPath)
+            if sChildPath.endswith(".jpg") or sChildPath.endswith(".jpeg"):
+                lst.append(sChildPath)
     del lst[0]
     return lst
 
@@ -84,7 +86,7 @@ def getImageWithFaces(ipath, vpath):
     print t4-t3
     return [count, total_video_duration]
 
-@api_view(["POST", "GET"])
+@api_view(["POST"])
 @permission_classes((permissions.AllowAny,))
 def videoAnalyze(request):
     try:
@@ -93,19 +95,31 @@ def videoAnalyze(request):
         # vpath = "/Users/gaurav/AnacondaProjects/FD/naja.mp4"
         # ipath = "/Users/gaurav/Documents/cc"
         # vpath = "/Users/gaurav/Documents/cc.mp4"
-        ipath = request.data["ipath"]
+        # ipath = request.data["ipath"]
         vpath = request.data["vpath"]
+        ipath = os.path.dirname(vpath)
+        print vpath
+        print ipath
         data = getImageWithFaces(ipath, vpath)
         total_face_duration = data[0]
         total_video_duration = data[1]
         t2=datetime.now()
-        # subprocess.call()
-
             # Draw a rectangle around the faces
             # for (x, y, w, h) in faces:
             #     cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
             # cv2.imshow("Faces found", image)
             # cv2.waitKey(0)
+        try:
+            # subprocess.call(["cd", ipath, "&", "rm", "*.jpg"])
+            # subprocess.call("ls")
+            lst = os.listdir(ipath)
+            for image in lst:
+                if image.endswith(".jpg"):
+                    os.remove(ipath+"/"+image)
+        except Exception as e:
+            print "in ex"
+            print e
+        print t2-t1
         return Response({"success": True, "total_video_duration": total_video_duration, "total_face_duration": total_face_duration}, status = status.HTTP_200_OK)
     except Exception as e:
         print e
