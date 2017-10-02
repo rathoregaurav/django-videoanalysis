@@ -56,7 +56,6 @@ def getVideoFrames(ipath, vpath):
     vidcap.release()    
     return total_dr
 
-
 def getImageWithFaces(ipath, vpath):
     total_video_duration = "None"
     t1 = datetime.now()
@@ -85,7 +84,6 @@ def getImageWithFaces(ipath, vpath):
     print t4-t3
     return [count, total_video_duration]
 
-
 @api_view(["POST", "GET"])
 @permission_classes((permissions.AllowAny,))
 def videoAnalyze(request):
@@ -101,6 +99,7 @@ def videoAnalyze(request):
         total_face_duration = data[0]
         total_video_duration = data[1]
         t2=datetime.now()
+        subprocess.call()
 
             # Draw a rectangle around the faces
             # for (x, y, w, h) in faces:
