@@ -99,7 +99,7 @@ def videoAnalyze(request):
         total_face_duration = data[0]
         total_video_duration = data[1]
         t2=datetime.now()
-        subprocess.call()
+        # subprocess.call()
 
             # Draw a rectangle around the faces
             # for (x, y, w, h) in faces:
