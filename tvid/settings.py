@@ -14,6 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print BASE_DIR
 
 
 # Quick-start development settings - unsuitable for production
@@ -56,9 +57,14 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-        'rest_framework.permissions.IsAdminUser'
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        # 'rest_framework.permissions.DjangoModelPermissions',
+        # # 'rest_framework.permissions.IsAdminUser'
+        # 'rest_framework.parsers.JSONParser',
+        # 'rest_framework.parsers.MultiPartParser',
+        # 'rest_framework.parsers.FileUploadParser',
     ],
     'PAGE_SIZE': 10
 }
@@ -140,3 +146,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = BASE_DIR+'/static/'
+MEDIA_ROOT = BASE_DIR+'/media/'

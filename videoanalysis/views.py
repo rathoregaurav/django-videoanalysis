@@ -9,6 +9,8 @@ from tvid.settings import STATIC_URL
 from rest_framework import status
 import subprocess
 import os
+from rest_framework.parsers import JSONParser, FileUploadParser, MultiPartParser
+from tvid.settings import BASE_DIR, MEDIA_ROOT, STATIC_URL
 
 def getDirectoryContents(dPath):
     import os 
@@ -31,6 +33,8 @@ def getVideoFrames(ipath, vpath):
     seconds = 10
     fps = int(round(vidcap.get(cv2.CAP_PROP_FPS))) # Gets the frames per second
     print "fps: "+str(fps)
+    if fps<1:
+        return Response({"success": False, "error": str("Frame per second is Zero")}) 
 
     multiplier = fps * seconds
     length = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -87,8 +91,9 @@ def getImageWithFaces(ipath, vpath):
     return [count, total_video_duration]
 
 @api_view(["POST"])
-@permission_classes((permissions.AllowAny,))
+# @permission_classes((permissions.AllowAny,))
 def videoAnalyze(request):
+    parser_classes = (MultiPartParser, FileUploadParser)
     try:
         t1=datetime.now()
         # ipath = "/Users/gaurav/AnacondaProjects/FD/frames"
@@ -96,8 +101,12 @@ def videoAnalyze(request):
         # ipath = "/Users/gaurav/Documents/cc"
         # vpath = "/Users/gaurav/Documents/cc.mp4"
         # ipath = request.data["ipath"]
-        vpath = request.data["vpath"]
-        ipath = os.path.dirname(vpath)
+        # vpath = request.data["vpath"]
+        # ipath = os.path.dirname(vpath)
+        # print vpath
+        # print ipath
+        vpath = str(MEDIA_ROOT)+"video/"+str(dict(request.FILES)["videoPath"][0].name)
+        ipath = str(MEDIA_ROOT)+"frames/"
         print vpath
         print ipath
         data = getImageWithFaces(ipath, vpath)
